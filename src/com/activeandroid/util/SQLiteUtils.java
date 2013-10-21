@@ -18,6 +18,7 @@ package com.activeandroid.util;
 
 import android.database.Cursor;
 import android.os.Build;
+import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 import com.activeandroid.Cache;
@@ -158,7 +159,7 @@ public final class SQLiteUtils {
 				definition.append(")");
 			}
 
-			if (name.equals("Id")) {
+			if (name.equals(BaseColumns._ID)) {
 				definition.append(" PRIMARY KEY AUTOINCREMENT");
 			}
 
@@ -175,7 +176,7 @@ public final class SQLiteUtils {
 			if (FOREIGN_KEYS_SUPPORTED && ReflectionUtils.isModel(type)) {
 				definition.append(" REFERENCES ");
 				definition.append(Cache.getTableInfo((Class<? extends Model>) type).getTableName());
-				definition.append("(Id)");
+				definition.append("(" + BaseColumns._ID + ")");
 				definition.append(" ON DELETE ");
 				definition.append(column.onDelete().toString().replace("_", " "));
 				definition.append(" ON UPDATE ");
@@ -198,7 +199,7 @@ public final class SQLiteUtils {
 
 			if (cursor.moveToFirst()) {
 				do {
-					Model entity = Cache.getEntity(type, cursor.getLong(cursor.getColumnIndex("Id")));
+					Model entity = Cache.getEntity(type, cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)));
 					if (entity == null) {
 						entity = (T) entityConstructor.newInstance();
 					}

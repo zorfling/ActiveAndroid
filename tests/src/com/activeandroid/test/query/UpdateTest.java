@@ -19,43 +19,44 @@ package com.activeandroid.test.query;
 import com.activeandroid.query.Set;
 import com.activeandroid.query.Update;
 import com.activeandroid.test.MockModel;
+import android.provider.BaseColumns;
 
 public class UpdateTest extends SqlableTestCase {
 	private static final String UPDATE_PREFIX = "UPDATE MockModel ";
-	
+
 	public void testUpdate() {
 		assertSqlEquals(UPDATE_PREFIX, update());
 	}
-	
+
 	public void testUpdateSet() {
-		assertSqlEquals(UPDATE_PREFIX + "SET Id = 5 ",
-				update().set("Id = 5"));
+		assertSqlEquals(UPDATE_PREFIX + "SET " +  BaseColumns._ID + " = 5 ",
+				update().set(BaseColumns._ID + " = 5"));
 	}
-	
+
 	public void testUpdateWhereNoArguments() {
-		assertSqlEquals(UPDATE_PREFIX + "SET Id = 5 WHERE Id = 1 ",
+		assertSqlEquals(UPDATE_PREFIX + "SET " +  BaseColumns._ID + " = 5 WHERE " +  BaseColumns._ID + " = 1 ",
 				update()
-					.set("Id = 5")
-					.where("Id = 1"));
+					.set(BaseColumns._ID + " = 5")
+					.where(BaseColumns._ID + " = 1"));
 	}
-	
+
 	public void testUpdateWhereWithArguments() {
 		Set set = update()
-				.set("Id = 5")
-				.where("Id = ?", 1);
+				.set(BaseColumns._ID + " = 5")
+				.where(BaseColumns._ID + " = ?", 1);
 		assertArrayEquals(set.getArguments(), "1");
-		assertSqlEquals(UPDATE_PREFIX + "SET Id = 5 WHERE Id = ? ",
+		assertSqlEquals(UPDATE_PREFIX + "SET " +  BaseColumns._ID + " = 5 WHERE " +  BaseColumns._ID + " = ? ",
 				set);
-		
+
 		set = update()
-				.set("Id = 5")
-				.where("Id = ?", 1)
-				.where("Id IN (?, ?, ?)", 5, 4, 3);
+				.set(BaseColumns._ID + " = 5")
+				.where(BaseColumns._ID + " = ?", 1)
+				.where(BaseColumns._ID + " IN (?, ?, ?)", 5, 4, 3);
 		assertArrayEquals(set.getArguments(), "5", "4", "3");
-		assertSqlEquals(UPDATE_PREFIX + "SET Id = 5 WHERE Id IN (?, ?, ?) ",
+		assertSqlEquals(UPDATE_PREFIX + "SET " +  BaseColumns._ID + " = 5 WHERE " +  BaseColumns._ID + " IN (?, ?, ?) ",
 				set);
 	}
-	
+
 	private Update update() {
 		return new Update(MockModel.class);
 	}
